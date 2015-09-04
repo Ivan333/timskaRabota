@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<script src='https://cdn.firebase.com/js/client/2.0.4/firebase.js'></script>
+		<script src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js'></script>
+
+		<!--za FirePad  -->
+		<!-- CodeMirror and its JavaScript mode file -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/4.5.0/codemirror.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/4.5.0/mode/javascript/javascript.js"></script>
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/4.5.0/codemirror.css" />
+
+		<!-- Firepad -->
+		<link rel="stylesheet" href="https://cdn.firebase.com/libs/firepad/1.1.0/firepad.css" />
+		<script src="https://cdn.firebase.com/libs/firepad/1.1.0/firepad.min.js"></script>
+		<!--end-->
+		
+		<!-- Spektrump  -->
+		<link rel="stylesheet" href="http://bgrins.github.io/spectrum/spectrum.css" />
+		<script src="http://bgrins.github.io/spectrum/spectrum.js"></script>
+		<!-- end-->
+
+		
+		<!--our css and js -->
+		<link rel="stylesheet" href="styles.css" />
+		<script src="firebaseScripts.js"></script>
+		<!-- end-->
+
+		
+	</head>
+	<body>
+		<div id="firepad-container" >
+			<div id="firepad"></div>
+		</div>
+
+		<br />
+		<div id="canvas-container">
+			<canvas id="drawing-canvas" width="700" height="500"></canvas>
+		</div>
+		<div id="controls-holder">
+			<div id="color-wrapper">
+				<button id="code">
+					Code
+				</button>
+
+				<div id="colorholder">
+				<button id='clear-canvas'>
+					Clear
+				</button>
+				<input type='text' id="spectrump-color-picker" />
+					<label>Tool:
+						<select id="dtool">
+							<option value="pencil">Pencil</option>
+							<option value="line">Line</option>
+							<option value="rect">Rectangle</option>
+							<option value="rect">Circle</option>
+						</select></label>
+
+				</div>
+			</div>
+			<div id="button-wrapper">
+					<button id="draw">
+						Draw
+					</button>
+				<div class="buttons">
+				
+					<button id="undo">
+						Undo
+					</button>
+					<button id="redo">
+						Redo
+					</button>
+						
+					<button id="help">
+						Pomos
+					</button>
+					
+				</div>
+			</div>
+		</div>
+		
+		<div id='test'></div>
+		<script>
+			$(document).ready(function() {
+				fireTest("https://blistering-torch-7811.firebaseio.com/",
+				'https://blistering-torch-7811.firebaseio.com/teamWorkProject2/Students/',
+				'https://blistering-torch-7811.firebaseio.com/teamWorkProject2/StudentsData/',
+				'121207','121207',"ffedb3",document.getElementById('firepad'),'#undo','#redo','#help','https://blistering-torch-7811.firebaseio.com/teamWorkProject2/StudentsData/'
+				,1,"000",'drawing-canvas','draw','clear','clear-canvas','spectrump-color-picker','Pencil').initStudent();
+
+			});
+		</script>
+	</body>
+
+</html>

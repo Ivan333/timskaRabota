@@ -1,0 +1,77 @@
+			#firepad-container {
+				width: 700px;
+				height: 500px;			
+				background-color: rgba(255, 255, 255, 0.5);
+				z-index: 1;
+			}
+			#controls-holder{
+				width: 700px;
+				margin-top: 10px;
+			}
+		
+			#canvas-container {
+				width: 700px;
+				height: 500px;
+				border: 1px solid gray;
+			
+				position: absolute;
+				top: 8px;
+				left: 8px;
+				z-index: -1;
+			
+				background-color: rgba(255,255,255,0.5);
+			}
+			
+			#firepad {
+				width: 90%;
+				height: 90%;
+			}
+			#studentContainer {
+				float: right;
+				background-color: lightgray;
+				padding: 3px;
+				display: inline;
+			}
+			.student {
+				background-color: darkgray;
+			}
+			.powered-by-firepad {
+				display: none;
+			}
+
+			.colorbox {
+				width: 22px;
+				height: 22px;
+				margin: 1px;
+				display: inline-block;
+				border: 3px solid black;
+			}
+			
+			#firepad{
+				width: 700px;
+				height: 500px;
+			}
+			
+			#colorholder {
+				float: right;
+			}
+			
+			.firepad .CodeMirror {
+				background: rgba(255,255,255,0.5);
+			}
+			.firepad{
+				z-index: 1;
+			}
+			.buttons{
+				float: right
+			}
+			
+			#button-wrapper{
+				width: 700px;
+				height: 40px;
+			}
+			#color-wrapper{
+				width: 700px;
+				height: 40px;
+				display: none;
+			}

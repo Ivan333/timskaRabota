@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<script src='https://cdn.firebase.com/js/client/2.0.4/firebase.js'></script>
+		<script src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js'></script>
+
+		<!--za FirePad  -->
+		<!-- CodeMirror and its JavaScript mode file -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/4.5.0/codemirror.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/4.5.0/mode/javascript/javascript.js"></script>
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/4.5.0/codemirror.css" />
+
+		<!-- Firepad -->
+		<link rel="stylesheet" href="https://cdn.firebase.com/libs/firepad/1.1.0/firepad.css" />
+		<script src="https://cdn.firebase.com/libs/firepad/1.1.0/firepad.min.js"></script>
+		<!--end-->
+
+		<!-- Spektrump  -->
+		<link rel="stylesheet" href="http://bgrins.github.io/spectrum/spectrum.css" />
+		<script src="http://bgrins.github.io/spectrum/spectrum.js"></script>
+		<!-- end-->
+
+		<!--our css and js -->
+		<link rel="stylesheet" href="styles.css" />
+		<script src="firebaseScripts.js"></script>
+		
+		<!-- end-->
+
+	</head>
+	<body >
+		<div id='studentContainer'>
+
+		</div>
+		<div id="firepad-container" >
+			<div id="firepad"></div>
+		</div>
+
+		<br />
+		<div id="canvas-container">
+			<canvas id="drawing-canvas" width="700" height="500"></canvas>
+		</div>
+		<div id="controls-holder">
+
+			<div id="color-wrapper">
+				<button id="code">
+					Code
+				</button>
+
+				<div id="colorholder">
+					<button id='clear-canvas'>
+						Clear
+					</button>
+					<input type='text' id="spectrump-color-picker" />
+					<label>Tool:
+						<select id="dtool">
+							<option value="pencil">Pencil</option>
+							<option value="line">Line</option>
+							<option value="rect">Rectangle</option>
+							<option value="circle">Circle</option>
+						</select></label>
+				</div>
+			</div>
+			<div id="button-wrapper">
+				<button id="draw">
+					Draw
+				</button>
+				<div class="buttons">
+
+					<button id="undo">
+						Undo
+					</button>
+					<button id="redo">
+						Redo
+					</button>
+
+				</div>
+			</div>
+		</div>
+
+		<script>
+			$(document).ready(function() {
+				var codeMirror;
+				var firepadDiv = document.getElementById('firepad');
+				var professor_id = '-JgCANkUPNABkpxSWiaA';
+				var mainFire;
+
+				var fillTextField = function(key) {
+					$('.firepad').remove();
+					if (mainFire) {
+						mainFire.detachDraw();
+					}
+					mainFire = '';
+					mainFire = fireTest("https://blistering-torch-7811.firebaseio.com/", 'https://blistering-torch-7811.firebaseio.com/teamWorkProject2/Students/', 'https://blistering-torch-7811.firebaseio.com/teamWorkProject2/StudentsData/', key, professor_id, "ffed33", document.getElementById('firepad'), '#undo', '#redo', '#help', 'https://blistering-torch-7811.firebaseio.com/teamWorkProject2/StudentsData/', 1, "000", 'drawing-canvas', 'draw', 'clear', 'clear-canvas', 'spectrump-color-picker','Pencil');
+					mainFire.initProfessor();
+				};
+
+				var addClickToStudentsHandeler = function() {
+					fillTextField($(this).find('.key').html());
+					$(this).css('color', 'black');
+					var tmpPP = new Firebase('https://blistering-torch-7811.firebaseio.com/teamWorkProject2/Students/' + $(this).find('.key').html());
+					tmpPP.update({
+						help : ''
+					});
+
+				};
+				var addHoverToStudentHandeler = function() {
+					$(this).css('cursor', 'pointer');
+				};
+
+				function bindHandelers() {
+					$("#studentContainer .student").bind('click', addClickToStudentsHandeler);
+					$("#studentContainer .student").bind('mouseover', addHoverToStudentHandeler);
+				};
+
+				function unbindHandelers() {
+					$("#studentContainer .student").unbind('click', addClickToStudentsHandeler);
+					$("#studentContainer .student").unbind('mouseover', addHoverToStudentHandeler);
+				};
+
+				var firepadRefStud = new Firebase('https://blistering-torch-7811.firebaseio.com/teamWorkProject2/Students/');
+				// child added se povikuva ednas i potoa sekogas koga ke se dodade dete
+				firepadRefStud.on('child_added', function(childSnapshot, prevChildName) {
+					var key = childSnapshot.key();
+					var username = childSnapshot.val().name;
+					var status = '';
+					var color = '';
+					if (!childSnapshot.val().online) {
+						status = 'Offline'
+					} else {
+						status = 'Online'
+					}
+					if (childSnapshot.val().help) {
+						color = 'red'
+					} else {
+						color = 'black'
+					}
+
+					$("#studentContainer").append("<div class='student' id='" + key + "' style='color:" + color + "'><p class='name'>" + username + '</p>' + "<p class='key'>" + key + '</p>' + "<p> status: <span class='status'>" + status + '</span></p></div>');
+					unbindHandelers();
+					bindHandelers();
+
+				});
+				// koga ke se trgne nekoj student da se promeni toa vo listata
+				firepadRefStud.on('child_removed', function(oldChildSnapshot) {
+					var key = ChildSnapshot.key();
+					var username = ChildSnapshot.val().name;
+					$('.student').each(function() {
+						if ($(this).find('.name').html() == username && $(this).find('.key').html() == key) {
+							$(this).remove();
+						}
+					});
+				});
+
+				// koga studentot ke klikne za pomos
+				firepadRefStud.on('child_changed', function(childSnapshot, prevChildName) {
+					var key = childSnapshot.key();
+					var username = childSnapshot.val().name;
+					var help = childSnapshot.val().help;
+
+					if (help) {
+						$('#' + key).css('color', 'red');
+					} else {
+						$('#' + key).css('color', 'black');
+					}
+					var status = '';
+					if (childSnapshot.val().online) {
+						status = 'Online';
+					} else {
+						status = 'Offline';
+					}
+					if ($('#' + key).find('.status').html() != status) {
+						$('#' + key).find('.status').text(status);
+					}
+
+				});
+
+			});
+
+		</script>
+	</body>
+
+</html>
